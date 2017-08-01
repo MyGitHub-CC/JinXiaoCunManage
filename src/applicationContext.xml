@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd"
+	default-autowire="byName" default-lazy-init="true">
+
+
+	<!-- 加载db.properties文件中的内容，db.properties文件中key命名要有一定的特殊规则 -->
+	<context:property-placeholder location="classpath:db.properties" />
+
+
+	<!-- 自动扫描Spring注解配置 并保证@Required,@Autowired的属性被注入 -->
+	<context:component-scan base-package="service" />
+	<context:component-scan base-package="dao" />
+	<context:component-scan base-package="aop" />
+
+
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<!-- property池启动时的初始值 -->
+		<property name="password" value="${jdbc.password}" />
+		<!--初始化时获取的连接数，取值应在minPoolSize与maxPoolSize之间。Default: 3 -->
+		<property name="initialPoolSize">
+			<value>10</value>
+		</property>
+		<!--连接池中保留的最小连接数。 -->
+		<property name="minPoolSize">
+			<value>5</value>
+		</property>
+
+		<!--连接池中保留的最大连接数。Default: 15 -->
+		<property name="maxPoolSize">
+			<value>30</value>
+		</property>
+		<!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 -->
+		<property name="acquireIncrement">
+			<value>5</value>
+		</property>
+	</bean>
+
+	<!-- 配置Hibernate的数据源代理工厂：方法一，使用p属性通配符，按文件名搜索匹配的映射文件 -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+		p:dataSource-ref="dataSource">
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">no</prop>
+				<prop key="current_session_context_class">thread</prop>
+			</props>
+		</property>
+		<!-- 加载hibernate注解形式实体 -->
+		<property name="mappingResources">
+			<list>
+				<value>bean/Student.hbm.xml</value>
+				<value>bean/BanJi.hbm.xml</value>
+				<value>bean/User.hbm.xml</value>
+				<value>bean/Classify.hbm.xml</value>
+				<value>bean/Product.hbm.xml</value>
+				<value>bean/Supplier.hbm.xml</value>
+				<value>bean/Customer.hbm.xml</value>
+				<value>bean/Operator.hbm.xml</value>
+				<value>bean/Purchase.hbm.xml</value>
+				<value>bean/Sales.hbm.xml</value>
+				<value>bean/PurAndPro.hbm.xml</value>
+				<value>bean/SalAndPro.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<!-- 事务策略 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 传播行为 -->
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="modify*" propagation="REQUIRED" />
+			<tx:method name="find*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="get*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="select*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="search*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="*" read-only="true" />
+
+		</tx:attributes>
+	</tx:advice>
+	<!-- aop声明式事务管理 -->
+	<aop:config>
+		<aop:pointcut id="hkService" expression="execution(* service.impl.*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="hkService" />
+	</aop:config>
+
+</beans>
