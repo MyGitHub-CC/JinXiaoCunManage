@@ -11,6 +11,7 @@ public class Sales {
 	private String note;
 	private Operator operator;
 	private Set<SalAndPro> salAndPros;
+	private int xtFlag;
 
 	public int getId() {
 		return id;
@@ -76,12 +77,20 @@ public class Sales {
 		this.salAndPros = salAndPros;
 	}
 
+	public int getXtFlag() {
+		return xtFlag;
+	}
+
+	public void setXtFlag(int xtFlag) {
+		this.xtFlag = xtFlag;
+	}
+
 	@Override
 	public String toString() {
 		return "Sales [id=" + id + ", customer=" + customer + ", count="
 				+ count + ", date=" + date + ", receipt=" + receipt + ", note="
 				+ note + ", operator=" + operator + ", salAndPros="
-				+ salAndPros + "]";
+				+ salAndPros + ", xtFlag=" + xtFlag + "]";
 	}
 
 }

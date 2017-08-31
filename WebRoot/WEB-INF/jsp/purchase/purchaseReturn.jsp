@@ -8,17 +8,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
   <head>
     <base href="<%=basePath%>">
-    
-    <title>采购退货</title>
+    <title>采购退货录入</title>
 	<script src="bootstrap/js/jquery.min.js" type="text/javascript"></script>
 	<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css"></link>
-	<style>
-		#tbody td {
-		 overflow:hidden;
-		 word-break:break-all;
-		}
-	</style>
+	<link rel="stylesheet" href="my/myWrite.css" type="text/css"></link>
   </head>
   <%
   	List<Product> products = (List<Product>) request.getAttribute("products");
@@ -27,13 +21,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
    %>
 <body>
   <div class="container" style="width:1100px;">
+    <nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand">采购退货单</a>
+			</div>
+		</div>
+	</nav>
 	<div class="col-md-12 column">
 		<form class="navbar-form navbar-left" role="search">
 			<div class="form-group">
 				<span class="search-span"> 退货日期:</span> 
-				<input type="date" name="date" class="form-control" >
+				<input type="date" name="date" class="form-control" id="date">
 			</div>
-			<span class="search-span"> 供应商:</span> 
+			<span class="search-span">供应商:</span> 
 			<select name="supplierId" class="form-control">
 	        	<option value="0">请选择：</option>
 	        	<%for(int i = 0; i < suppliers.size(); i++){
@@ -43,7 +44,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        	</option>
 	        	<%} %>
 	        </select> 
-	        <span class="search-span"> 经办人:</span> 
+	        <span class="search-span">经办人:</span> 
 			<select name="operatorId" class="form-control">
 	        	<option value="0">请选择：</option>
 	        	<%for(int i = 0; i < operators.size(); i++){
@@ -55,11 +56,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        </select> 
 	        <input type="button" id="submit" class="btn btn-primary" value="保存"/>
 		</form>
-		<table class="table table-bordered table-hover table-condensed  table-striped" +9+>
+		<table class="table table-bordered table-hover table-condensed  table-striped" >
 			<thead>
 			    <tr style="margin:10px;">
-			      <th width="25">ID</th>
+			      <th width="25">序号</th>
 			      <th width="120">商品名称</th>
+			      <th width="30">单位</th>
+			      <th width="40">规格 / 品牌</th>
 			      <th width="30">数量</th>
 			      <th width="30">单价</th>
 			      <th width="45">金额</th>
@@ -72,99 +75,159 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    	for(int i = 0; i < 5; i++){
 			     %>
 			     <tr data-id="<%=i+1%>">
-				     <td style="width:80px;"><%=i+1 %></td>
-				     <td class="proId" style="width:100px;">
-					     <select name="proId" class="form-control" style="width:100%;height:100%;">
-				        	<option value="0">请选择：</option>
-				        	<%
-				        		for(int j = 0; j < products.size(); j++){
-				        	%>
-				        	<option value="<%=products.get(j).getId()%>">
-				        		<%=products.get(j).getName() %>
-				        	</option>
-				        	<%} %>
-				        </select> 
-			        </td>
-				    <td class="num td-input" style="width:80px;"></td>
-				    <td class="price td-input" style="width:80px;"></td>
-				    <td class="totalPrice" style="width:80px;"></td>
-				    <td class="note td-input" style="width:80px;"></td>
-				    <td style="width:80px;"> </td>
+				     <input type="hidden" name="proId" class="proId" value="0" />
+				     <td style="width:25px;text-align:center;"><%=i+1 %></td>
+				     <td class="proName" style="width:100px;" data-toggle="modal" data-target="#myModal"></td>
+				     <td class="proUnit" style="width:50px;"></td>
+				     <td class="proClassify" style="width:60px;"></td>
+				     <td class="num td-input td-input2" style="width:60px;">0.00</td>
+				     <td class="price td-input td-input2" style="width:60px;">0.00</td>
+				     <td class="totalPrice" style="width:80px;">0.00</td>
+				     <td class="note td-input" style="width:80px;"></td>
+				     <td style="width:80px;"><a class="delete-tr">删除</a></td>
 			     </tr>
 			  <% }%>
 			</tbody>
-		</table>
+	  </table>
 	  <button id="add-tr" type="button" class="btn btn-primary">添加一行</button>  
 	  <div class="form-group" style="float:right;width:270px;">
 		  <label class="search-label col-sm-3" style="line-height:34px;">总价:</label>
 		  <div class="col-sm-9"> 
-		  	<input id="count" name="count" class="form-control" />
+		  	<input id="count" name="count" class="form-control" readonly="readonly"  />
 		  </div>
 	  </div>
 	</div>
 </div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close closeModal" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					选择商品
+				</h4>
+			</div>
+			<div class="modal-body">
+				<table class="table table-bordered table-hover table-condensed  table-striped" >
+				<thead>
+				    <tr style="margin:10px;">
+				      <th width="70">编号</th>
+				      <th width="120">商品名称</th>
+				      <th width="40">单位</th>
+					  <th width="100">规格 / 品牌</th>
+				      <th width="90">当前库存</th>
+				      <th width="70">备注</th>
+				    </tr>
+				</thead>
+				<tbody id="tbody">
+					 <%
+				    	for(int i = 0; i < products.size(); i++){
+				    	   Product product = products.get(i);
+				     %>
+				     <tr data-id="<%=product.getId()%>"  class="selectedPro">
+					     <td class="productId"><%=product.getId() %></td>
+					     <td class="productName"><%=product.getName() %></td>
+						 <td class="productUnit"><%=product.getUnit() %></td>
+						 <td class="productClassify"><%=product.getClassifyProduct().getName() %></td>
+						 <td class="productInventory"><%=product.getInventory()%></td>
+						 <td>
+						 	<%String note = "无";if(product.getNote() != null){note = product.getNote();}%>
+							<%=note %>
+						 </td>
+				     </tr>
+				  <% }%>
+				</tbody>
+			</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default closeModal" data-dismiss="modal" >关闭</button>
+				<button type="button" class="btn btn-primary" id="submit">保存</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+<script src="my/myWrite.js" type="text/javascript"></script>
 <script type="text/javascript">
-$().ready(function(){
-	// td可编辑
-	$("#tbody .td-input").attr("contentEditable",true);
-	// 点击添加一行
-	var tr = "<tr><td  class='proId'></td><td class='num td-input'></td>";
-	tr += "<td class='price td-input'></td><td></td><td></td><td></td><td></td></tr>";
-	$("#add-tr").click(function(){
-		$("table").append(tr);
-		$(".td-input").attr("contentEditable",true);
+$(document).ready(function(){
+	var selectedTr = 0;
+	$(".proName").click(function(){
+		selectedTr = $(this).parents("tr");
 	});
-	
-	$(".td-input").blur(function(){
-		var tr = $(this).parents("tr");
-		var num = tr.children(".num").text() - 0;
-		var price = tr.children(".price").text() - 0;
-		var totalPrice = num * price;
-		tr.children(".totalPrice").text(totalPrice);
-		var count = 0;
-		$(".totalPrice").each(function(index,element){
-			count += $(this).text() - 0;
-		});
-		$("#count").val(count);
+	$(".selectedPro").dblclick(function(){ 
+		var proId = $(this).children(".productId").text();
+		var proName = $(this).children(".productName").text();
+		var proUnit = $(this).children(".productUnit").text();
+		var proClassify = $(this).children(".productClassify").text();
+		selectedTr.children(".proId").val(proId);
+		selectedTr.children(".proName").text(proName);
+		selectedTr.children(".proUnit").text(proUnit);
+		selectedTr.children(".proClassify").text(proClassify);
+		$("#myModal").modal("hide");
 	});
-	
+	// 保存提交
 	$("#submit").click(function(){
-		var date = $("[name=date]").val(); 
+		var flag = false;
 		var supplierId = $("[name=supplierId]").val(); 
 		var operatorId = $("[name=operatorId]").val(); 
-		var count = $("[name=count]").val(); 
-		var purchaseId = 0;
-		$.ajax({
-			type:"post",
-			url:"purchaseAdd",
-			data:"purchase.date=" + date + "&purchase.supplier.id=" + supplierId 
-				+ "&purchase.operator.id=" + operatorId +"&purchase.count=" + count ,
-			dataType:"text",
-			success:function(data){
-				purchaseId = data;
-				purAndProAdd();
-			}
+		if(supplierId > 0 || operatorId > 0){
+			flag = true;
+		}else{
+			alert("供应商或经办人不能为空！");
+			return;
+		}
+		flag = false;
+		$("#tbody tr").each(function(index,element){
+			var proId = $(this).children(".proId").val();
+			if(proId > 0){
+				flag = true;
+			};
 		});
-		function purAndProAdd(){
-			$("#tbody tr").each(function(index,element){
-				var proId = $(this).children(".proId").children("[name=proId]").val();
-				var price = $(this).children(".price").text();
-				var num = $(this).children(".num").text();
-				var totalPrice = $(this).children(".totalPrice").text();
-				var note = $(this).children(".note").text();
-				if(proId != 0){
-					$.ajax({
-						type:"post",
-						url:"purAndProAdd",
-						data:"purAndPro.purchase.id=" + purchaseId +"&purAndPro.num=" + num + "&purAndPro.price=" + price 
-						+ "&purAndPro.totalPrice=" + totalPrice + "&purAndPro.note=" + note + "&purAndPro.product.id=" + proId,
-						dataType:"text",
-						success:function(data){
-							alert(data);
-						}
-					});
+		if(flag){
+			var date = $("[name=date]").val(); 
+			var supplierId = $("[name=supplierId]").val(); 
+			var operatorId = $("[name=operatorId]").val(); 
+			var count = $("[name=count]").val(); 
+			var purchaseId = 0;
+			$.ajax({
+				type:"post",
+				url:"purchaseAdd",
+				data:"purchase.date=" + date + "&purchase.supplier.id=" + supplierId 
+					+ "&purchase.operator.id=" + operatorId +"&purchase.count=" + count +"&purchase.jtFlag=1",
+				dataType:"text",
+				success:function(data){
+					purchaseId = data;
+					purAndProAdd();
+					alert("保存成功！");
+					location.href="purchaseReturnManage";
 				}
 			});
+			function purAndProAdd(){
+				$("#tbody tr").each(function(index,element){
+					var proId = $(this).children(".proId").val();
+					var price = $(this).children(".price").text();
+					var num = $(this).children(".num").text();
+					var totalPrice = $(this).children(".totalPrice").text();
+					var note = $(this).children(".note").text();
+					if(proId > 0){
+						$.ajax({
+							type:"post",
+							url:"purAndProSub",
+							data:"purAndPro.purchase.id=" + purchaseId +"&purAndPro.num=" + num + "&purAndPro.price=" + price
+							+ "&purAndPro.totalPrice=" + totalPrice + "&purAndPro.note=" + note + "&purAndPro.product.id=" + proId,
+							dataType:"text",
+							success:function(data){
+								
+							}
+						});
+					}
+				});
+			}
+		} else {
+			alert("商品不能为空！");
+			return;
 		}
 	});
 });

@@ -14,7 +14,7 @@
 		<property name="unit">
 			<column name="unit" />
 		</property>
-		<many-to-one name="Classify" class="bean.Classify" lazy="false" >
+		<many-to-one name="classifyProduct" class="bean.ClassifyProduct" lazy="false" >
 			<column name="cla_id"></column>
 		</many-to-one>
 		<property name="inventory">

@@ -8,17 +8,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
   <head>
     <base href="<%=basePath%>">
-    
     <title>显示销售单详情</title>
 	<script src="bootstrap/js/jquery.min.js" type="text/javascript"></script>
 	<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css"></link>
-	<style>
-	#tbody td {
-		overflow:hidden;
-		word-break:break-all;
-	}
-	</style>
+	<link rel="stylesheet" href="my/myWrite.css" type="text/css"></link>
   </head>
   <%
   	Sales sales = (Sales) request.getAttribute("sales");
@@ -51,6 +45,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    <tr style="margin:10px;">
 			      <th width="25">ID</th>
 			      <th width="120">商品名称</th>
+			      <th width="30">单位</th>
+			      <th width="40">规格 / 品牌</th>
 			      <th width="30">数量</th>
 			      <th width="30">单价</th>
 			      <th width="45">金额</th>
@@ -63,31 +59,34 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    	for(SalAndPro salAndPro : salAndPros){
 			     %>
 			     <tr data-id="<%=salAndPro.getId()%>">
-				     <td style="width:80px;"><%=salAndPro.getId() %></td>
-				     <td class="proId" style="width:100px;">
-					     <select name="proId" class="form-control" style="width:100%;height:100%;">
-				        	<option value="0"><%=salAndPro.getProduct().getName() %></option>
-				        </select> 
-			        </td>
-				    <td class="num td-input" style="width:80px;"><%=salAndPro.getNum() %></td>
-				    <td class="price td-input" style="width:80px;"><%=salAndPro.getPrice() %></td>
-				    <td class="totalPrice" style="width:80px;"><%=salAndPro.getTotalPrice() %></td>
-				    <td class="note td-input" style="width:80px;"><%=salAndPro.getNote() %></td>
-				    <td style="width:80px;"> </td>
+				    <td><%=salAndPro.getId() %></td>
+				    <td><%=salAndPro.getProduct().getName() %> </td>
+				    <td><%=salAndPro.getProduct().getUnit() %></td>
+				    <td><%=salAndPro.getProduct().getClassifyProduct().getName() %></td>
+				    <td class="td-input2"><%=salAndPro.getNum() %></td>
+				    <td class="td-input2"><%=salAndPro.getPrice() %></td>
+				    <td class="td-input2"><%=salAndPro.getTotalPrice() %></td>
+				    <td><%=salAndPro.getNote() %></td>
+				    <td></td>
 			     </tr>
 			  <% }%>
 			</tbody>
 		</table>
-		<button id="add-tr" type="button" class="btn btn-primary">添加一行</button>  
-		<div style="float:right;width:150px;">
-			<span class="search-span" > 总价:</span> 
-			<input id="count" name="count" class="form-control" value="<%=sales.getCount()%>" />
-		</div>
+	  <button id="add-tr" type="button" class="btn btn-primary">添加一行</button>  
+	  <div class="form-group" style="float:right;width:270px;">
+		  <label class="search-label col-sm-3" style="line-height:34px;">总价:</label>
+		  <div class="col-sm-9"> 
+		  	<input id="count" name="count" class="form-control" readonly="readonly"  value="<%=sales.getCount() %>" />
+		  </div>
+	  </div>
 	</div>
 </div>
 <script type="text/javascript">
 $().ready(function(){
-
+	$(".td-input2").each(function(index,element){
+		$(this).text(($(this).text() - 0).toFixed(2));
+	});
+	$("#count").val(($("#count").val()-0).toFixed(2));
 });
 </script>
 </body>

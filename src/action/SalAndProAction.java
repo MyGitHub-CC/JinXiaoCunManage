@@ -28,10 +28,12 @@ public class SalAndProAction {
 
 	@Action(value = "salAndProAdd")
 	public void salAndProAdd() {
-		int result = salAndProService.add(salAndPro);
 		Product product = new Product();
-		product.setId(salAndPro.getProduct().getId());
-		product.setInventory(salAndPro.getNum());
+		int proId = salAndPro.getProduct().getId();
+		double proNum = salAndPro.getNum();
+		product.setId(proId);
+		product.setInventory(proNum);
+		int result = salAndProService.add(salAndPro);
 		int result2 = productService.modifyBySales(product);
 		try {
 			HttpServletResponse response = ServletActionContext.getResponse();
@@ -46,6 +48,26 @@ public class SalAndProAction {
 		}
 	}
 
+	@Action(value = "salAndProSub")
+	public void salAndProSub() {
+		int result = salAndProService.add(salAndPro);
+		Product product = new Product();
+		product.setId(salAndPro.getProduct().getId());
+		product.setInventory(salAndPro.getNum());
+		int result2 = productService.modifyByPurchase(product);
+		try {
+			HttpServletResponse response = ServletActionContext.getResponse();
+			response.setCharacterEncoding("UTF-8");
+			if (result > 0 && result2 > 0) {
+				response.getWriter().write(String.valueOf(result));
+			} else {
+				response.getWriter().write("保存失败");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public SalAndPro getSalAndPro() {
 		return salAndPro;
 	}

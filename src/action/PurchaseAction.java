@@ -76,11 +76,31 @@ public class PurchaseAction {
 	@Action(value = "purchaseManage", results = { @Result(name = "success", 
 			location = "/WEB-INF/jsp/purchase/purchaseManage.jsp") })
 	public String purchaseManage() {
+		if(purchase == null){
+			purchase = new Purchase();
+			Supplier supplier = new Supplier();
+			purchase.setSupplier(supplier);
+			purchase.setJtFlag(0);
+		}
 		purchases = purchaseService.search(purchase);
 		suppliers = supplierService.searchAll();
 		return "success";
 	}
 
+	@Action(value = "purchaseReturnManage", results = { @Result(name = "success", 
+			location = "/WEB-INF/jsp/purchase/purchaseManage.jsp") })
+	public String purchaseReturnManage() {
+		if(purchase == null){
+			purchase = new Purchase();
+			Supplier supplier = new Supplier();
+			purchase.setSupplier(supplier);
+		}
+		purchase.setJtFlag(1);
+		purchases = purchaseService.search(purchase);
+		suppliers = supplierService.searchAll();
+		return "success";
+	}
+	
 	@Action(value = "purchaseById", results = { @Result(name = "success", 
 			location = "/WEB-INF/jsp/purchase/purchaseById.jsp") })
 	public String purchaseById() {

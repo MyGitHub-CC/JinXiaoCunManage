@@ -26,14 +26,12 @@ public class PurchaseDaoImpl implements PurchaseDao {
 	@Override
 	public List<Purchase> search(Purchase purchase) {
 		getSession();
-		String hql = "from Purchase where 1 = 1 and supplier.del=0  ";
-		if(purchase != null){
-			if(purchase.getSupplier().getId() > 0){
-				hql += " and supplier.id=" + purchase.getSupplier().getId();
-			}
-			if(!purchase.getDate().equals("")){
-				hql += " and date='" + purchase.getDate() +"'";
-			}
+		String hql = "from Purchase where 1 = 1 and supplier.del=0  and jtFlag=" + purchase.getJtFlag();
+		if (purchase.getSupplier().getId() > 0) {
+			hql += " and supplier.id=" + purchase.getSupplier().getId();
+		}
+		if ( purchase.getDate() != null && !"".equals(purchase.getDate()) ) {
+			hql += " and date='" + purchase.getDate() + "'";
 		}
 		Query query = session.createQuery(hql);
 		return query.list();

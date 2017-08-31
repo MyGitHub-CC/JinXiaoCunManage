@@ -8,7 +8,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
   <head>
     <base href="<%=basePath%>">
-    <title>进货管理</title>
+    <title>进退货管理</title>
 	<script src="bootstrap/js/jquery.min.js" type="text/javascript"></script>
 	<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css"></link>
@@ -17,12 +17,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
  <%
 	List<Purchase> list = (List<Purchase>) request.getAttribute("purchases");
 	List<Supplier> suppliers = (List<Supplier>) request.getAttribute("suppliers");
-	Purchase purchase = new Purchase();
-	Supplier supplier2 = new Supplier();
-	purchase.setSupplier(supplier2);
-	if(request.getAttribute("purchase") != null){
-		purchase = (Purchase) request.getAttribute("purchase");
-	}
+	Purchase purchase = (Purchase) request.getAttribute("purchase");
 	int supplierId = 0;
 	if(purchase.getSupplier().getId() > 0){
 		supplierId = purchase.getSupplier().getId();
@@ -31,9 +26,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	if(purchase.getDate() != ""){
 		date = purchase.getDate();
 	}
+	String jtFlag = "采购";
+	if(purchase.getJtFlag() > 0){
+		jtFlag = "退货";
+	}
  %>
 <body>
 	<form action="purchaseManage" method="post" class="form-inline" role="form">
+		<input type="hidden" name="purchase.jtFlag" value="<%=purchase.getJtFlag()%>" />
 		<div class="form-group">
 			<span class="search-span"> 供应商:</span> 
 			<select name="purchase.supplier.id" class="form-control">
@@ -49,7 +49,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        </select> 
 		</div>
 		<div class="form-group">
-			<span class="search-span">进货日期：</span>
+			<span class="search-span"><%=jtFlag %>日期：</span>
 			<input type="date" name="purchase.date" class="form-control" 
 			<%if(date != ""){%>value="<%=date%>"<% } %> />
 		</div>
@@ -60,10 +60,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <table class="table table-hover text-center table-bordered">
     <tr>
       <th>ID</th>
-      <th>进货单号</th>
+      <th><%=jtFlag %>单号</th>
       <th>供应商</th>
       <th>总价</th>
-      <th>进货日期</th>
+      <th><%=jtFlag %>日期</th>
       <th>经办人</th>
       <th>备注</th>
       <th>操作</th>

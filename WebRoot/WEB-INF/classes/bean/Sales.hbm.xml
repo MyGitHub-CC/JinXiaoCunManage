@@ -26,6 +26,9 @@
 		<property name="note">
 			<column name="note" />
 		</property>
+		<property name="xtFlag">
+			<column name="xtflag" />
+		</property>
 		<set name="salAndPros" table="m_sal_pro" lazy="false" >
 			<key column="sal_id" ></key>
 			<one-to-many class="bean.SalAndPro"></one-to-many>

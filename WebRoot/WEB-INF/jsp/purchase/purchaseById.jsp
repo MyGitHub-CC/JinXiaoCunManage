@@ -12,23 +12,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script src="bootstrap/js/jquery.min.js" type="text/javascript"></script>
 	<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css"></link>
-	<style>
-		#tbody td {
-		 overflow:hidden;
-		 word-break:break-all;
-		}
-	</style>
+	<link rel="stylesheet" href="my/myWrite.css" type="text/css"></link>
   </head>
   <%
   	Purchase purchase = (Purchase) request.getAttribute("purchase");
 	Set<PurAndPro> purAndPros = purchase.getPurAndPros();
+	String jtFlag = "采购";
+	if(purchase.getJtFlag() > 0){
+		jtFlag = "退货";
+	}
   %>
 <body>
   <div class="container" style="width:1100px;">
 	<div class="col-md-12 column">
 		<form class="navbar-form navbar-left" role="search">
 			<div class="form-group">
-				<span class="search-span"> 进货日期:</span> 
+				<span class="search-span"> <%=jtFlag %>日期:</span> 
 				<input type="date" name="date" class="form-control"  value="<%=purchase.getDate() %>" />
 			</div>
 			<span class="search-span"> 供应商:</span> 
@@ -50,10 +49,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    <tr style="margin:10px;">
 			      <th width="25">ID</th>
 			      <th width="120">商品名称</th>
+			      <th width="30">单位</th>
+			      <th width="40">规格 / 品牌</th>
 			      <th width="30">数量</th>
 			      <th width="30">单价</th>
 			      <th width="45">金额</th>
-			      <th width="50">备注</th>
+			      <th width="100">备注</th>
 			      <th width="50">操作</th>
 			    </tr>
 			</thead>
@@ -62,17 +63,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				  	for(PurAndPro purAndPro : purAndPros){
 			     %>
 			     <tr data-id="<%=purAndPro.getId()%>">
-				     <td style="width:80px;"><%=purAndPro.getId() %></td>
-				     <td class="proId" style="width:100px;">
-					     <select name="proId" class="form-control" style="width:100%;height:100%;">
-				        	<option value="0"><%=purAndPro.getProduct().getName() %></option>
-				        </select> 
-			        </td>
-				    <td class="num td-input td-input2" style="width:80px;"><%=purAndPro.getNum() %></td>
-				    <td class="price td-input td-input2" style="width:80px;"><%=purAndPro.getPrice() %></td>
-				    <td class="totalPrice td-input2" style="width:80px;"><%=purAndPro.getTotalPrice() %></td>
-				    <td class="note td-input " style="width:80px;"><%=purAndPro.getNote() %></td>
-				    <td style="width:80px;"> </td>
+				    <td><%=purAndPro.getId() %></td>
+				    <td><%=purAndPro.getProduct().getName() %></td>
+				    <td><%=purAndPro.getProduct().getUnit() %></td>
+				    <td><%=purAndPro.getProduct().getClassifyProduct().getName() %></td>
+				    <td class="td-input2"><%=purAndPro.getNum() %></td>
+				    <td class="td-input2"><%=purAndPro.getPrice() %></td>
+				    <td class="td-input2"><%=purAndPro.getTotalPrice() %></td>
+				    <td><%=purAndPro.getNote() %></td>
+				    <td> </td>
 			     </tr>
 			  <% } %>
 			</tbody>

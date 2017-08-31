@@ -8,20 +8,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
   <head>
     <base href="<%=basePath%>">
-    
     <title>商品资料</title>
     <script src="bootstrap/js/jquery.min.js" type="text/javascript"></script>
 	<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css"></link>
+	<link rel="stylesheet" href="my/myWrite.css" type="text/css"></link>
   </head>
   <%
   	List<Product> products = (List<Product>) request.getAttribute("products");
-  	List<Classify> classifys = (List<Classify>) request.getAttribute("classifys");
- 	Product product2 = new Product() ;
-  	if(request.getAttribute("product") != null){
-  		product2 = (Product) request.getAttribute("product");
-  	}
-   %>
+    List<ClassifyProduct> classifyProducts = (List<ClassifyProduct>) request.getAttribute("classifyProducts");
+   	Product product2 = new Product() ;
+      if(request.getAttribute("product") != null){
+    		product2 = (Product) request.getAttribute("product");
+    	}
+  %>
   <body>
   	<form action="product" method="post" class="form-inline" role="form">
 		<div class="form-group">
@@ -39,42 +39,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
    	<table class="table table-bordered table-hover table-condensed  table-striped" >
 		<thead>
 		    <tr style="margin:10px;">
-		      <th width="25">ID</th>
-		      <th width="120">商品名称</th>
-		      <th width="30">单位</th>
-			  <th width="30">规格</th>
-		      <th width="30">类别</th>
-		      <th width="30">库存</th>
-		      <th width="50">备注</th>
-		      <th width="50">操作</th>
+		      <th>ID</th>
+		      <th>商品名称</th>
+		      <th>单位</th>
+			  <th>规格 / 品牌</th>
+		      <th>库存</th>
+		      <th>备注</th>
+		      <th>操作</th>
 		    </tr>
 		</thead>
 		<tbody id="tbody">
 			 <%
 		    	for(int i = 0; i < products.size(); i++){
-		    	Product product = products.get(i);
+		    	   Product product = products.get(i);
 		     %>
 		     <tr data-id="<%=product.getId()%>">
-			     <td style="width:80px;"><%=product.getId() %></td>
-			     <td class="proId" style="width:100px;">
-					 <%=product.getName() %>
-			     </td>
-				 <td style="width:50px;">
-					<%=product.getClassify().getName() %>
-				 </td>
-				 <td style="width:50px;">
-					<%=product.getUnit() %>
-				 </td>
-				 <td style="width:50px;">
-				 	<%=product.getInventory()%>
-				 </td>
-				
-				 <td style="width:80px;">
-					  <%
+			     <td><%=product.getId() %></td>
+			     <td><%=product.getName() %></td>
+				 <td><%=product.getUnit() %></td>
+				 <td><%=product.getClassifyProduct().getName()  %></td>
+				 <td><%=product.getInventory()%></td>
+				 <td>
+					 <%
 					  	String note = "无";
-					 	if(product.getNote() != null){
-					  	note = product.getNote();
-					  	} 
+					 	if(product.getNote() != null){note = product.getNote();} 
 					  %>
 					 <%=note %>
 				 </td>
@@ -111,12 +99,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<div class="form-group">
 							<label class="col-sm-3 control-label">商品类别</label>
 							<div class="col-sm-8">
-								<select name="product.classify.id" class="form-control" id="proClassify">
+								<select name="product.classifyProduct.id" class="form-control" id="proClassify">
 						        	<option value="0">请选择：</option>
-						        	<%for(int i = 0; i < classifys.size(); i++){
+						        	<%for(int i = 0; i < classifyProducts.size(); i++){
 						        	%>
-						        	<option value="<%=classifys.get(i).getId()%>">
-						        		<%=classifys.get(i).getName() %>
+						        	<option value="<%=classifyProducts.get(i).getId()%>">
+						        		<%=classifyProducts.get(i).getName()%>
 						        	</option>
 						        	<%} %>
 						        </select> 

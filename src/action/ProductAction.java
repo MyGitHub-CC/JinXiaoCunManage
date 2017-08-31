@@ -15,11 +15,11 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import service.ClassifyService;
+import service.ClassifyProductService;
 import service.ProductService;
 import service.PurAndProService;
 import service.SalAndProService;
-import bean.Classify;
+import bean.ClassifyProduct;
 import bean.Product;
 import bean.PurAndPro;
 import bean.SalAndPro;
@@ -30,7 +30,7 @@ public class ProductAction {
 	@Autowired
 	ProductService productService;
 	@Autowired
-	ClassifyService classifyService;
+	ClassifyProductService classifyService;
 	@Autowired
 	PurAndProService purAndProService;
 	@Autowired
@@ -39,7 +39,7 @@ public class ProductAction {
 	private Product product;
 	private PurAndPro purAndPro;
 	private List<Product> products;
-	private List<Classify> classifys;
+	private List<ClassifyProduct> classifyProducts;
 	private List<PurAndPro> purAndPros;
 	private List<SalAndPro> salAndPros;
 
@@ -59,7 +59,7 @@ public class ProductAction {
 	@Action(value = "product", results = { @Result(name = "success", location = "/WEB-INF/jsp/product/product.jsp") })
 	public String product() {
 		products = productService.search(product);
-		classifys = classifyService.searchAll();
+		classifyProducts = classifyService.searchAll();
 		return "success";
 	}
 
@@ -123,7 +123,8 @@ public class ProductAction {
 		int result = productService.delete(product);
 		if (result > 0) {
 			try {
-				HttpServletResponse response = ServletActionContext.getResponse();
+				HttpServletResponse response = ServletActionContext
+						.getResponse();
 				response.setCharacterEncoding("UTF-8");
 				PrintWriter out = response.getWriter();
 				if (result > 0) {
@@ -187,12 +188,12 @@ public class ProductAction {
 		this.salAndPros = salAndPros;
 	}
 
-	public List<Classify> getClassifys() {
-		return classifys;
+	public List<ClassifyProduct> getClassifyProducts() {
+		return classifyProducts;
 	}
 
-	public void setClassifys(List<Classify> classifys) {
-		this.classifys = classifys;
+	public void setClassifyProducts(List<ClassifyProduct> classifyProducts) {
+		this.classifyProducts = classifyProducts;
 	}
 
 }

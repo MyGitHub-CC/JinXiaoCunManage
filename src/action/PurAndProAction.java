@@ -28,11 +28,33 @@ public class PurAndProAction {
 
 	@Action(value = "purAndProAdd")
 	public void purAndProAdd() {
+		Product product = new Product();
+		int proId = purAndPro.getProduct().getId();
+		double proNum = purAndPro.getNum();
+		product.setId(proId);
+		product.setInventory(proNum);
+		int result = purAndProService.add(purAndPro);
+		int result2 = productService.modifyByPurchase(product);
+		try {
+			HttpServletResponse response = ServletActionContext.getResponse();
+			response.setCharacterEncoding("UTF-8");
+			if (result > 0 && result2 > 0) {
+				response.getWriter().write(String.valueOf(result));
+			} else {
+				response.getWriter().write("保存失败");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Action(value = "purAndProSub")
+	public void purAndProSub() {
 		int result = purAndProService.add(purAndPro);
 		Product product = new Product();
 		product.setId(purAndPro.getProduct().getId());
 		product.setInventory(purAndPro.getNum());
-		int result2 = productService.modifyByPurchase(product);
+		int result2 = productService.modifyBySales(product);
 		try {
 			HttpServletResponse response = ServletActionContext.getResponse();
 			response.setCharacterEncoding("UTF-8");

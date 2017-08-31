@@ -75,26 +75,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    	for(int i = 0; i < 5; i++){
 			     %>
 			     <tr data-id="<%=i+1%>">
+				     <input type="hidden" name="proId" class="proId" value="0" />
 				     <td style="width:25px;text-align:center;"><%=i+1 %></td>
-				     <td class="proId" style="width:100px;">
-					     <select name="proId" class="form-control" style="width:100%;height:100%;">
-				        	<option value="0">请选择：</option>
-				        	<%
-				        		for(int j = 0; j < products.size(); j++){
-				        	%>
-				        	<option value="<%=products.get(j).getId()%>">
-				        		<%=products.get(j).getName() %>
-				        	</option>
-				        	<%} %>
-				        </select> 
-			        </td>
-				    <td class="unit" style="width:50px;"></td>
-				    <td class="classify" style="width:60px;"></td>
-				    <td class="num td-input td-input2" style="width:60px;">0.00</td>
-				    <td class="price td-input td-input2" style="width:60px;">0.00</td>
-				    <td class="totalPrice" style="width:80px;">0.00</td>
-				    <td class="note td-input" style="width:80px;"></td>
-				    <td style="width:80px;"><a class="delete-tr">删除</a></td>
+				     <td class="proName" style="width:100px;" data-toggle="modal" data-target="#myModal"></td>
+				     <td class="proUnit" style="width:50px;"></td>
+				     <td class="proClassify" style="width:60px;"></td>
+				     <td class="num td-input td-input2" style="width:60px;">0.00</td>
+				     <td class="price td-input td-input2" style="width:60px;">0.00</td>
+				     <td class="totalPrice" style="width:80px;">0.00</td>
+				     <td class="note td-input" style="width:80px;"></td>
+				     <td style="width:80px;"><a class="delete-tr">删除</a></td>
 			     </tr>
 			  <% }%>
 			</tbody>
@@ -108,7 +98,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	  </div>
 	</div>
 </div>
-
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
@@ -125,42 +114,28 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<table class="table table-bordered table-hover table-condensed  table-striped" >
 				<thead>
 				    <tr style="margin:10px;">
-				      <th width="25">ID</th>
+				      <th width="70">编号</th>
 				      <th width="120">商品名称</th>
-				      <th width="30">单位</th>
-					  <th width="30">规格</th>
-				      <th width="30">类别</th>
-				      <th width="30">库存</th>
-				      <th width="50">备注</th>
+				      <th width="40">单位</th>
+					  <th width="100">规格 / 品牌</th>
+				      <th width="90">当前库存</th>
+				      <th width="70">备注</th>
 				    </tr>
 				</thead>
 				<tbody id="tbody">
 					 <%
 				    	for(int i = 0; i < products.size(); i++){
-				    	Product product = products.get(i);
+				    	   Product product = products.get(i);
 				     %>
-				     <tr data-id="<%=product.getId()%>">
-					     <td style="width:80px;"><%=product.getId() %></td>
-					     <td class="proId" style="width:100px;">
-							 <%=product.getName() %>
-					     </td>
-						 <td style="width:50px;">
-							<%=product.getClassify().getName() %>
-						 </td>
-						 <td style="width:50px;">
-							<%=product.getUnit() %>
-						 </td>
-						 <td style="width:50px;">
-						 	<%=product.getInventory()%>
-						 </td>
-						 <td style="width:80px;">
-							  <%
-							  	String note = "无";
-							 	if(product.getNote() != null){
-							  	note = product.getNote();
-							  	} 
-							  %>
-							 <%=note %>
+				     <tr data-id="<%=product.getId()%>"  class="selectedPro">
+					     <td class="productId"><%=product.getId() %></td>
+					     <td class="productName"><%=product.getName() %></td>
+						 <td class="productUnit"><%=product.getUnit() %></td>
+						 <td class="productClassify"><%=product.getClassifyProduct().getName() %></td>
+						 <td class="productInventory"><%=product.getInventory()%></td>
+						 <td>
+						 	<%String note = "无";if(product.getNote() != null){note = product.getNote();}%>
+							<%=note %>
 						 </td>
 				     </tr>
 				  <% }%>
@@ -169,57 +144,28 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default closeModal" data-dismiss="modal" >关闭</button>
-				<button type="button" class="btn btn-primary" id="submit">
-					保存
-				</button>
+				<button type="button" class="btn btn-primary" id="submit">保存</button>
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal -->
 </div>
-
-
+<script src="my/myWrite.js" type="text/javascript"></script>
 <script type="text/javascript">
-$().ready(function(){
-	// 设置进货日期默认为今天
-	var mydate = new Date();
-	var year = mydate.getFullYear();
-	var month = mydate.getMonth()+ 1;
-	if (month >= 1 && month <= 9) {
-        month = "0" + month;
-    }
-   	var day = mydate.getDate();
-    if (day >= 0 && day <= 9) {
-        day = "0" + day;
-    }
-	var dateStr = year + "-" + month + "-" + day;
-	$("#date").val(dateStr);
-	// 设置td-input可编辑
-	$("#tbody .td-input").attr("contentEditable",true);
-	// 点击按钮添加一行
-	var tr = "<tr><td class='proId'></td><td class='num td-input'></td>";
-	tr += "<td class='price td-input'></td><td></td><td></td><td></td><td></td></tr>";
-	$("#add-tr").click(function(){
-		$("table").append(tr);
-		$(".td-input").attr("contentEditable",true);
+$(document).ready(function(){
+	var selectedTr = 0;
+	$(".proName").click(function(){
+		selectedTr = $(this).parents("tr");
 	});
-	
-	$(".proId").dblclick(function(){  
-		alert(123);
-	});
-	// 输入数量和单价，保留两位小数
-	$(".td-input2").blur(function(){
-		var th = ($(this).text() - 0);
-		$(this).text(th.toFixed(2));
-		var tr = $(this).parents("tr");
-		var num = tr.children(".num").text() - 0;
-		var price = tr.children(".price").text() - 0;
-		var totalPrice = num * price;
-		tr.children(".totalPrice").text(totalPrice.toFixed(2));
-		var count = 0;
-		$(".totalPrice").each(function(index,element){
-			count += $(this).text() - 0;
-		});
-		$("#count").val(count.toFixed(2));
+	$(".selectedPro").dblclick(function(){ 
+		var proId = $(this).children(".productId").text();
+		var proName = $(this).children(".productName").text();
+		var proUnit = $(this).children(".productUnit").text();
+		var proClassify = $(this).children(".productClassify").text();
+		selectedTr.children(".proId").val(proId);
+		selectedTr.children(".proName").text(proName);
+		selectedTr.children(".proUnit").text(proUnit);
+		selectedTr.children(".proClassify").text(proClassify);
+		$("#myModal").modal("hide");
 	});
 	// 保存提交
 	$("#submit").click(function(){
@@ -234,7 +180,7 @@ $().ready(function(){
 		}
 		flag = false;
 		$("#tbody tr").each(function(index,element){
-			var proId = $(this).children(".proId").children("[name=proId]").val() - 0;
+			var proId = $(this).children(".proId").val();
 			if(proId > 0){
 				flag = true;
 			};
@@ -249,21 +195,23 @@ $().ready(function(){
 				type:"post",
 				url:"purchaseAdd",
 				data:"purchase.date=" + date + "&purchase.supplier.id=" + supplierId 
-					+ "&purchase.operator.id=" + operatorId +"&purchase.count=" + count ,
+					+ "&purchase.operator.id=" + operatorId +"&purchase.count=" + count +"&purchase.jtFlag=0",
 				dataType:"text",
 				success:function(data){
 					purchaseId = data;
 					purAndProAdd();
+					alert("保存成功！");
+					location.href="purchaseManage";
 				}
 			});
 			function purAndProAdd(){
 				$("#tbody tr").each(function(index,element){
-					var proId = $(this).children(".proId").children("[name=proId]").val();
+					var proId = $(this).children(".proId").val();
 					var price = $(this).children(".price").text();
 					var num = $(this).children(".num").text();
 					var totalPrice = $(this).children(".totalPrice").text();
 					var note = $(this).children(".note").text();
-					if(proId != 0){
+					if(proId > 0){
 						$.ajax({
 							type:"post",
 							url:"purAndProAdd",
@@ -271,7 +219,7 @@ $().ready(function(){
 							+ "&purAndPro.totalPrice=" + totalPrice + "&purAndPro.note=" + note + "&purAndPro.product.id=" + proId,
 							dataType:"text",
 							success:function(data){
-								alert(data);
+								
 							}
 						});
 					}

@@ -12,6 +12,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <script src="bootstrap/js/jquery.min.js" type="text/javascript"></script>
 	<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css"></link>
+	<link rel="stylesheet" href="my/myWrite.css" type="text/css"></link>
   </head>
   <%
   	List<Product> products = (List<Product>) request.getAttribute("products");
@@ -53,7 +54,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						 <%=product.getName() %>
 				     </td>
 					 <td class="num td-input" style="width:80px;">
-						<%=product.getClassify().getName() %>
+						<%=product.getClassifyProduct().getName() %>
 					 </td>
 					 <td class="price td-input" style="width:80px;">
 					 	<%=product.getInventory() %>

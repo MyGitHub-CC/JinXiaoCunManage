@@ -4,7 +4,7 @@ public class Product {
 	private int id;
 	private String name;
 	private String unit;
-	private Classify classify;
+	private ClassifyProduct classifyProduct;
 	private double inventory;
 	private String note;
 	private String del;
@@ -33,12 +33,12 @@ public class Product {
 		this.unit = unit;
 	}
 
-	public Classify getClassify() {
-		return classify;
+	public ClassifyProduct getClassifyProduct() {
+		return classifyProduct;
 	}
 
-	public void setClassify(Classify classify) {
-		this.classify = classify;
+	public void setClassifyProduct(ClassifyProduct classifyProduct) {
+		this.classifyProduct = classifyProduct;
 	}
 
 	public double getInventory() {
@@ -68,8 +68,8 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", unit=" + unit
-				+ ", classify=" + classify + ", inventory=" + inventory
-				+ ", note=" + note + ", del=" + del + "]";
+				+ ", classifyProduct=" + classifyProduct + ", inventory="
+				+ inventory + ", note=" + note + ", del=" + del + "]";
 	}
 
 }

@@ -26,7 +26,10 @@
 		<property name="note">
 			<column name="note" />
 		</property>
-		<set name="purAndPros" table="m_pur_pro" lazy="false" cascade="save-update">
+		<property name="jtFlag">
+			<column name="jtflag" />
+		</property>
+		<set name="purAndPros" table="m_pur_pro" lazy="false" >
 			<key column="pur_id" ></key>
 			<one-to-many class="bean.PurAndPro"></one-to-many>
 		</set>

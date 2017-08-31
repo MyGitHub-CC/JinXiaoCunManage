@@ -12,39 +12,28 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script src="bootstrap/js/jquery.min.js" type="text/javascript"></script>
 	<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css"></link>
-	<style>
-		#tbody td {
-		 overflow:hidden;
-		 word-break:break-all;
-		}
-		.table th {
-		    text-align: center;
-		}
-		.search-span{
-		  	margin-left:10px;
-		}
-	</style>
+	<link rel="stylesheet" href="my/myWrite.css" type="text/css"></link>
   </head>
  <%
 	List<Sales> salesList = (List<Sales>) request.getAttribute("salesList");
 	List<Customer> customers = (List<Customer>) request.getAttribute("customers");
-	Sales sales = new Sales();
-	Customer customer2 = new Customer();
-	sales.setCustomer(customer2);
-	if(request.getAttribute("sales") != null){
-		sales = (Sales) request.getAttribute("sales");
-	}
+	Sales sales = (Sales) request.getAttribute("sales");
 	int customerId = 0;
-	if(sales.getCustomer().getId() > 0){
+	if(sales.getCustomer() != null && sales.getCustomer().getId() > 0){
 		customerId = sales.getCustomer().getId();
 	}
 	String date = "";
-	if(sales.getDate() != ""){
+	if(sales.getDate() != null && sales.getDate() != ""){
 		date = sales.getDate();
+	}
+	String xtFlag = "销售";
+	if(sales.getXtFlag() > 0){
+		xtFlag = "退货";
 	}
  %>
 <body>
 	<form action="salesManage" method="post" class="form-inline" role="form">
+		<input type="hidden" name="sales.xtFlag" value="<%=sales.getXtFlag()%>" />
 		<div class="form-group">
 			<span class="search-span"> 客户:</span> 
 			<select name="sales.customer.id" class="form-control">
@@ -60,7 +49,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        </select> 
 		</div>
 		<div class="form-group">
-			<span class="search-span">销售日期：</span>
+			<span class="search-span"><%=xtFlag %>日期：</span>
 			<input type="date" name="sales.date" class="form-control" 
 			<%if(date != ""){%>value="<%=date%>"<% } %> />
 		</div>
@@ -71,10 +60,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <table class="table table-hover text-center table-bordered">
     <tr>
       <th>ID</th>
-      <th>销售单号</th>
+      <th><%=xtFlag %>单号</th>
       <th>客户</th>
       <th>总价</th>
-      <th>出库日期</th>
+      <th><%=xtFlag %>日期</th>
       <th>经办人</th>
       <th>备注</th>
       <th>操作</th>
@@ -94,7 +83,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		 <%
 		  	String note = "无";
 		 	if(salesList.get(i).getNote()!= null){
-		  	note = salesList.get(i).getNote();
+		  		note = salesList.get(i).getNote();
 		  	} 
 		  %>
 		 <%=note %>
@@ -114,7 +103,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </table>
 <script type="text/javascript">
 $().ready(function(){
-
+	$(".td-input2").each(function(index,element){
+		$(this).text(($(this).text() - 0).toFixed(2));
+	});
 });
 </script>
 </body></html>

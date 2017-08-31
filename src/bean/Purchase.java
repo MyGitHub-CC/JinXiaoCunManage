@@ -11,6 +11,7 @@ public class Purchase {
 	private String note;
 	private Operator operator;
 	private Set<PurAndPro> purAndPros;
+	private int jtFlag;
 
 	public int getId() {
 		return id;
@@ -76,12 +77,20 @@ public class Purchase {
 		this.purAndPros = purAndPros;
 	}
 
+	public int getJtFlag() {
+		return jtFlag;
+	}
+
+	public void setJtFlag(int jtFlag) {
+		this.jtFlag = jtFlag;
+	}
+
 	@Override
 	public String toString() {
 		return "Purchase [id=" + id + ", supplier=" + supplier + ", count="
 				+ count + ", date=" + date + ", receipt=" + receipt + ", note="
 				+ note + ", operator=" + operator + ", purAndPros="
-				+ purAndPros + "]";
+				+ purAndPros + ", jtFlag=" + jtFlag + "]";
 	}
 
 }

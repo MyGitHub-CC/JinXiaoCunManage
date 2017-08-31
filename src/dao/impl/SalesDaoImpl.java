@@ -9,7 +9,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-import bean.Purchase;
 import bean.Sales;
 import dao.SalesDao;
 
@@ -27,12 +26,12 @@ public class SalesDaoImpl implements SalesDao {
 	@Override
 	public List<Sales> search(Sales sales) {
 		getSession();
-		String hql = "from Sales where 1 = 1 and customer.del=0  ";
+		String hql = "from Sales where 1 = 1 and customer.del=0 and xtFlag=" + sales.getXtFlag();
 		if(sales != null){
-			if(sales.getCustomer().getId() > 0){
+			if(sales.getCustomer() != null && sales.getCustomer().getId() > 0){
 				hql += " and customer.id=" + sales.getCustomer().getId();
 			}
-			if(!sales.getDate().equals("")){
+			if(sales.getDate() != null && !"".equals(sales.getDate())){
 				hql += " and date='" + sales.getDate() +"'";
 			}
 		}

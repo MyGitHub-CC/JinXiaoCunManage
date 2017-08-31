@@ -71,7 +71,9 @@
 				<value>bean/Student.hbm.xml</value>
 				<value>bean/BanJi.hbm.xml</value>
 				<value>bean/User.hbm.xml</value>
-				<value>bean/Classify.hbm.xml</value>
+				<value>bean/ClassifyProduct.hbm.xml</value>
+				<value>bean/ClassifyCustomer.hbm.xml</value>
+				<value>bean/ClassifySupplier.hbm.xml</value>
 				<value>bean/Product.hbm.xml</value>
 				<value>bean/Supplier.hbm.xml</value>
 				<value>bean/Customer.hbm.xml</value>

@@ -43,7 +43,8 @@ public class SalesAction {
 	private Product product;
 	private SalAndPro salAndPro;
 
-	@Action(value = "salesInput", results = { @Result(name = "success", location = "/WEB-INF/jsp/sales/salesInput.jsp") })
+	@Action(value = "salesInput", results = { @Result(name = "success", 
+			location = "/WEB-INF/jsp/sales/salesInput.jsp") })
 	public String salesInput() {
 		products = productService.search(product);
 		customers = customerService.searchAll();
@@ -70,16 +71,27 @@ public class SalesAction {
 		}
 	}
 
-	@Action(value = "salesManage", results = { @Result(name = "success", location = "/WEB-INF/jsp/sales/salesManage.jsp") })
+	@Action(value = "salesManage", results = { @Result(name = "success", 
+			location = "/WEB-INF/jsp/sales/salesManage.jsp") })
 	public String salesManage() {
 		salesList = salesService.search(sales);
 		customers = customerService.searchAll();
 		return "success";
 	}
 
-	@Action(value = "salesById", results = { @Result(name = "success", location = "/WEB-INF/jsp/sales/salesById.jsp") })
+	@Action(value = "salesById", results = { @Result(name = "success", 
+			location = "/WEB-INF/jsp/sales/salesById.jsp") })
 	public String salesById() {
 		sales = salesService.searchById(sales);
+		return "success";
+	}
+	
+	@Action(value = "salesReturn", results = { @Result(name = "success", 
+			location = "/WEB-INF/jsp/sales/salesReturn.jsp") })
+	public String salesReturn() {
+		products = productService.search(product);
+		customers = customerService.searchAll();
+		operators = operatorService.searchAll();
 		return "success";
 	}
 

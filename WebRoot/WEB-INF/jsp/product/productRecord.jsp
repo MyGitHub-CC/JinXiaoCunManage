@@ -8,16 +8,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
   <head>
     <base href="<%=basePath%>">
-    
     <title>库存记录</title>
     <script src="bootstrap/js/jquery.min.js" type="text/javascript"></script>
 	<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css"></link>
-	<style>
-		table tr th{
-			text-align:center;
-		}
-	</style>
+	<link rel="stylesheet" href="my/myWrite.css" type="text/css"></link>
   </head>
   <%
   	List<PurAndPro> purAndPros = (List<PurAndPro>) request.getAttribute("purAndPros");
@@ -31,10 +26,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		      <th>类型</th>
 		      <th>商品名称</th>
 		      <th>订单号</th>
-		      <th>进货日期</th>
-		      <th>进货数量</th>
-		      <th>进货单价</th>
-		      <th>进货总价</th>
+		      <th>进出库日期</th>
+		      <th>数量</th>
+		      <th>单价</th>
+		      <th>总价</th>
 		      <th>备注</th>
 		      <th>操作</th>
 		    </tr>
@@ -46,7 +41,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		     %>
 		     <tr data-id="<%=i%>">
 			     <td><%=purAndPro.getId() %></td>
-			     <td>采购进货</td>
+			     <%
+			     String jtFlag = "采购进货"; 
+			     if(purAndPro.getPurchase().getJtFlag() > 0 ){
+			     	 jtFlag = "采购退货"; 
+			     } 
+			     %>
+			     <td><%=jtFlag %></td>
 			     <td><%=purAndPro.getProduct().getName() %></td>
 			     <td>
 					 <%=purAndPro.getPurchase().getReceipt() %>
@@ -60,9 +61,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				 <td>
 				  <%
 				  	String note = "无";
-				 	if(purAndPro.getNote() != null){
-				  	note = purAndPro.getNote();
-				  	} 
+				 	if(purAndPro.getNote() != null){note = purAndPro.getNote();} 
 				  %>
 				 <%=note %>
 				 </td>
@@ -71,27 +70,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		  <% }%>
 	  	<%
 	    	for(int i = 0; i < salAndPros.size(); i++){
-	    	SalAndPro salAndPro = salAndPros.get(i);
+	    		SalAndPro salAndPro = salAndPros.get(i);
 	     %>
 		     <tr data-id="<%=i%>">
 			     <td><%=salAndPro.getId() %></td>
-			     <td>销售出库</td>
+			     <%
+			     String xtFlag = "销售出库"; 
+			     if(salAndPro.getSales().getXtFlag() > 0 ){
+			     	 xtFlag = "销售退货"; 
+			     } 
+			     %>
+			     <td><%=xtFlag %></td>
 			     <td><%=salAndPro.getProduct().getName() %></td>
-			     <td>
-					 <%=salAndPro.getSales().getReceipt() %>
-			     </td>
-				 <td>
-					<%=salAndPro.getSales().getDate() %>
-				 </td>
+			     <td><%=salAndPro.getSales().getReceipt() %></td>
+				 <td><%=salAndPro.getSales().getDate() %></td>
 				 <td><%=salAndPro.getNum() %></td>
 				 <td><%=salAndPro.getPrice() %></td>
 				 <td><%=salAndPro.getTotalPrice() %></td>
 				 <td>
-				  <%
+				  <% 
 				  	String note = "无";
-				 	if(salAndPro.getNote() != null){
-				  	note = salAndPro.getNote();
-				  	} 
+				 	if(salAndPro.getNote() != null){note = salAndPro.getNote();	} 
 				  %>
 				 <%=note %>
 				 </td>

@@ -36,24 +36,21 @@
   <div class="leftnav-title"><strong><span class="icon-list"></span>菜单列表</strong></div>
   <h2><span class="icon-user"></span>基本设置</h2>
   <ul>
-    <li><a href="purchaseInput" target="right"><span class="icon-caret-right"></span>网站设置</a></li>
-    <li><a href="pass.html" target="right"><span class="icon-caret-right"></span>修改密码</a></li>
-    <li><a href="page.html" target="right"><span class="icon-caret-right"></span>单页管理</a></li>  
-    <li><a href="adv.html" target="right"><span class="icon-caret-right"></span>首页轮播</a></li>   
-    <li><a href="book.html" target="right"><span class="icon-caret-right"></span>留言管理</a></li>     
-    <li><a href="column.html" target="right"><span class="icon-caret-right"></span>栏目管理</a></li>
+    <li><a href="web" target="right"><span class="icon-caret-right"></span>网站设置</a></li>
   </ul> 
   <h2><span class="icon-pencil-square-o"></span>进货管理</h2>
   <ul>
-    <li><a href="purchaseInput" target="right"><span class="icon-caret-right"></span>进货录入</a></li>
-    <li><a href="purchaseManage" target="right"><span class="icon-caret-right"></span>进货管理</a></li>
+    <li><a href="purchaseInput" target="right"><span class="icon-caret-right"></span>采购录入</a></li>
+    <li><a href="purchaseManage" target="right"><span class="icon-caret-right"></span>采购管理</a></li>
     <li><a href="purchaseReturn" target="right"><span class="icon-caret-right"></span>退货录入</a></li>
+    <li><a href="purchaseReturnManage" target="right"><span class="icon-caret-right"></span>采购退货管理</a></li>
   </ul> 
   <h2><span class="icon-pencil-square-o"></span>销售管理</h2>
   <ul>
     <li><a href="salesInput" target="right"><span class="icon-caret-right"></span>销售录入</a></li>
-    <li><a href="salesManage" target="right"><span class="icon-caret-right"></span>销售管理</a></li>
+    <li><a href="salesManage?sales.xtFlag=0" target="right"><span class="icon-caret-right"></span>销售管理</a></li>
     <li><a href="salesReturn" target="right"><span class="icon-caret-right"></span>退货录入</a></li>        
+    <li><a href="salesManage?sales.xtFlag=1" target="right"><span class="icon-caret-right"></span>销售退货管理</a></li>        
   </ul> 
   <h2><span class="icon-pencil-square-o"></span>库存管理</h2>
   <ul>
